@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Catálogo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .loading {
+            margin: 50px 0;
+        }
+        .error {
+            color: red;
+            margin: 50px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading" class="loading">
+        <h2>Carregando catálogo...</h2>
+        <p>Aguarde enquanto o catálogo é carregado.</p>
+    </div>
+    
+    <div id="catalog-container" style="display: none;"></div>
+    
+    <div id="error" class="error" style="display: none;">
+        <h2>Erro ao carregar catálogo</h2>
+        <p>O catálogo não pôde ser carregado. Por favor, verifique o link.</p>
+    </div>
+
+    <script>
+        // Função para decodificar dados da URL
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Carregar catálogo
+        function loadCatalog() {
+            const encodedData = getUrlParameter('data');
+            const title = getUrlParameter('title') || 'Catálogo de Calçados';
+            
+            if (!encodedData) {
+                showError();
+                return;
+            }
+            
+            try {
+                // Decodificar dados
+                const catalogHTML = decodeURIComponent(escape(atob(encodedData)));
+                
+                // Exibir catálogo
+                document.title = title;
+                document.getElementById('catalog-container').innerHTML = catalogHTML;
+                document.getElementById('catalog-container').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+                
+            } catch (error) {
+                console.error('Erro ao carregar catálogo:', error);
+                showError();
+            }
+        }
+
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+        }
+
+        // Carregar catálogo quando a página carregar
+        window.addEventListener('DOMContentLoaded', loadCatalog);
+    </script>
+</body>
+</html>
