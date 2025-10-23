@@ -6,6 +6,7 @@
     <title>Atualizar Catálogo - Administrador</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+        /* [MANTENHA TODOS OS ESTILOS ANTERIORES] */
         :root {
             --azul-royal: #0052cc;
             --branco: #ffffff;
@@ -806,15 +807,12 @@
             reader.onload = function() {
                 const dataUrl = reader.result;
                 
-                // Criar URL com os dados
-                const publicUrl = dataUrl;
-                
                 // Exibir o link
                 document.getElementById('public-link').textContent = "Use o botão 'Abrir Catálogo' abaixo";
-                document.getElementById('open-link').href = publicUrl;
+                document.getElementById('open-link').href = dataUrl;
                 
                 // Gerar QR Code
-                generateQRCode(publicUrl);
+                generateQRCode(dataUrl);
                 
                 // Mostrar seção de links
                 document.getElementById('link-section').style.display = 'block';
@@ -864,9 +862,11 @@
             });
         }
 
-        // Criar o HTML do catálogo (função completa)
-        function createCatalogHTML(productsData, historyData, lancamentosCategory, catalogTitle) {
-            return `<!DOCTYPE html>
+        // Criar o HTML do catálogo (função completa e CORRIGIDA)
+        // Criar o HTML do catálogo (função completa e CORRIGIDA)
+function createCatalogHTML(productsData, historyData, lancamentosCategory, catalogTitle) {
+    // CORREÇÃO: Template string bem formatada sem problemas de escape
+    const catalogHTML = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -1336,17 +1336,17 @@
             const isFavorite = favorites.includes(product.cod.toString());
             const isLancamento = product.secao === lancamentosCategory;
             
-            card.innerHTML = \`
-                \${isLancamento ? '<div class="lancamento-badge">' + lancamentosCategory + '</div>' : ''}
-                <img src="\${product.imagem}" alt="\${product.descricao}" class="product-image" onerror="this.src='https://via.placeholder.com/250x200?text=Imagem+Não+Encontrada'">
+            card.innerHTML = \\\`
+                \\\${isLancamento ? '<div class="lancamento-badge">' + lancamentosCategory + '</div>' : ''}
+                <img src="\\\${product.imagem}" alt="\\\${product.descricao}" class="product-image" onerror="this.src='https://via.placeholder.com/250x200?text=Imagem+Não+Encontrada'">
                 <div class="product-info">
-                    <span class="product-section">\${product.secao || 'Geral'}</span>
-                    <button class="favorite-btn \${isFavorite ? 'active' : ''}" data-cod="\${product.cod}">\${isFavorite ? '❤️' : '🤍'}</button>
-                    <div class="product-code">Cód: \${product.cod || 'N/A'}</div>
-                    <div class="product-description">\${product.descricao || 'Descrição não disponível'}</div>
-                    <div class="product-stock \${stockClass}">Estoque: \${qtd}</div>
+                    <span class="product-section">\\\${product.secao || 'Geral'}</span>
+                    <button class="favorite-btn \\\${isFavorite ? 'active' : ''}" data-cod="\\\${product.cod}">\\\${isFavorite ? '❤️' : '🤍'}</button>
+                    <div class="product-code">Cód: \\\${product.cod || 'N/A'}</div>
+                    <div class="product-description">\\\${product.descricao || 'Descrição não disponível'}</div>
+                    <div class="product-stock \\\${stockClass}">Estoque: \\\${qtd}</div>
                 </div>
-            \`;
+            \\\`;
             
             return card;
         }
@@ -1437,15 +1437,15 @@
                     if (product) {
                         const favoriteItem = document.createElement('div');
                         favoriteItem.className = 'favorite-item';
-                        favoriteItem.innerHTML = \`
+                        favoriteItem.innerHTML = \\\`
                             <div>
-                                <strong>\${product.descricao || 'Produto sem descrição'}</strong>
-                                <div>Cód: \${product.cod} | Seção: \${product.secao || 'Geral'}</div>
+                                <strong>\\\${product.descricao || 'Produto sem descrição'}</strong>
+                                <div>Cód: \\\${product.cod} | Seção: \\\${product.secao || 'Geral'}</div>
                             </div>
                             <div>
-                                <button class="favorite-btn active" data-cod="\${product.cod}">❤️</button>
+                                <button class="favorite-btn active" data-cod="\\\${product.cod}">❤️</button>
                             </div>
-                        \`;
+                        \\\`;
                         favoritesList.appendChild(favoriteItem);
                     }
                 });
@@ -1484,12 +1484,12 @@
             } else {
                 let historyHTML = '<h4>Histórico de Compras:</h4>';
                 clientHistory.forEach(item => {
-                    historyHTML += \`
+                    historyHTML += \\\`
                         <div class="history-item">
-                            <strong>\${item.descricao || 'Produto não identificado'}</strong>
-                            <div>Cód: \${item.codProduto || 'N/A'} | Quantidade: \${item.quantidade || 0} | Última compra: \${item.ultimaCompra || 'N/A'}</div>
+                            <strong>\\\${item.descricao || 'Produto não identificado'}</strong>
+                            <div>Cód: \\\${item.codProduto || 'N/A'} | Quantidade: \\\${item.quantidade || 0} | Última compra: \\\${item.ultimaCompra || 'N/A'}</div>
                         </div>
-                    \`;
+                    \\\`;
                 });
                 historyDiv.innerHTML = historyHTML;
             }
@@ -1539,7 +1539,6 @@
     </script>
 </body>
 </html>`;
-        }
-    </script>
-</body>
-</html>
+
+    return catalogHTML;
+}
